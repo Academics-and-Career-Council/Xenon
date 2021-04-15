@@ -31,15 +31,14 @@ func (m mongoClient) Connect() {
 	m.Database = database
 }
 
-func (m mongoClient) getUser(email string) (*User, error) {
-	u := &User{}
+func (m mongoClient) getUser(email string, dest interface{}) error {
 	e := strings.Split(email, "@")[0]
 	filter := bson.D{{Key: "username", Value: e}}
-	err := MongoClient.Collection("ug").FindOne(context.TODO(), filter).Decode(u)
+	err := MongoClient.Collection("ug").FindOne(context.TODO(), filter).Decode(dest)
 	if err != nil {
 		log.Printf("Unable to check access : %v", err)
 	}
-	return u, err
+	return err
 }
 
 func (m mongoClient) SetID(key string, id string, username string) error {

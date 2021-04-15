@@ -14,3 +14,10 @@ type User struct {
 	CoursesUnlocked []string `bson:"courses_unlocked"`
 	CoursesReviewed []string `bson:"courses_reviewed"`
 }
+
+type UserMetaData struct {
+	Banned          bool     `bson:"banned"`
+	Credits         int      `bson:"credits"`
+	CoursesUnlocked []string `bson:"courses_unlocked"`
+	Role            string   `bson:"role"`
+}

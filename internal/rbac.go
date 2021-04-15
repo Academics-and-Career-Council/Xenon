@@ -49,7 +49,7 @@ func (p PermissionsClinet) Init() {
 	}
 	p.RBAC = rbac
 
-	if p.IsGranted("admin", permissions["view-course"], nil) {
+	if p.IsGranted("admin", permissions["getCourseData"], nil) {
 		log.Println("Permissions Checked!")
 	}
 }

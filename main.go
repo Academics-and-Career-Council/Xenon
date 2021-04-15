@@ -12,6 +12,7 @@ func init() {
 	internal.PermissionManager.Init()
 	internal.MongoClient.Connect()
 	internal.OryClient.Connect()
+	internal.BadgerDB.Init()
 }
 
 func main() {

@@ -1,6 +1,6 @@
 FROM golang:latest
 LABEL MAINTAINER="Shivam Malhotra"
-LABEL VERSION="0.1.0"
+LABEL VERSION="0.0.1"
 
 # Build the server
 RUN mkdir /server

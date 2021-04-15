@@ -21,14 +21,23 @@ func Introspect(q string) string {
 	return n
 }
 
-func IntrospectGetReviews(email string, course string) (bool, error) {
-	u, err := MongoClient.getUser(email)
-	if err != nil {
-		return false, err
-	}
+func IntrospectGetReviews(u UserMetaData, course string) bool {
 	i := sort.SearchStrings(u.CoursesUnlocked, course)
 	if i < len(u.CoursesUnlocked) && u.CoursesUnlocked[i] == course {
-		return true, err
+		return true
 	}
-	return false, err
+	return false
+}
+
+func getUser(email string) (*UserMetaData, error) {
+	u := &UserMetaData{}
+	err := BadgerDB.Get(email, u)
+	if err != nil {
+		err = MongoClient.getUser(email, u)
+		BadgerDB.Save("permiso:"+email, u)
+		if err != nil {
+			return u, err
+		}
+	}
+	return u, err
 }
