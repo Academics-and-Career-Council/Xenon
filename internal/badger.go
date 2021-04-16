@@ -9,18 +9,22 @@ import (
 )
 
 type badgerClient struct {
-	*badger.DB
+	d *badger.DB
 }
 
 var BadgerDB badgerClient
 
-func (b badgerClient) Init() {
+func Init() {
 	db, err := badger.Open(badger.DefaultOptions("./cache"))
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db.Close()
-	b.DB = db
+	// b.db = db
+	// err = b.db.View(func(txn *badger.Txn) error {
+	// 	_, err := txn.Get([]byte("hello"))
+	// 	return err
+	// })
+	BadgerDB = badgerClient{db}
 }
 
 func (b badgerClient) Save(key string, value interface{}) error {
@@ -28,7 +32,7 @@ func (b badgerClient) Save(key string, value interface{}) error {
 	if err != nil {
 		return err
 	}
-	err = b.Update(func(txn *badger.Txn) error {
+	err = b.d.Update(func(txn *badger.Txn) error {
 		e := badger.NewEntry([]byte(key), []byte(p)).WithTTL(time.Hour * 24)
 		err := txn.SetEntry(e)
 		return err
@@ -39,15 +43,20 @@ func (b badgerClient) Save(key string, value interface{}) error {
 func (b badgerClient) Get(key string, dest interface{}) error {
 	var p []byte
 
-	err := b.View(func(txn *badger.Txn) error {
-		item, err := txn.Get([]byte("answer"))
+	err := b.d.View(func(txn *badger.Txn) error {
+		_, err := txn.Get([]byte(key))
 
-		err = item.Value(func(val []byte) error {
-			p = append([]byte{}, val...)
+		if err != nil {
+			log.Print(err)
 			return err
-		})
+		}
 
-		return err
+		// err = item.Value(func(val []byte) error {
+		// 	p = append([]byte{}, val...)
+		// 	return err
+		// })
+
+		return nil
 	})
 	if err != nil {
 		return err

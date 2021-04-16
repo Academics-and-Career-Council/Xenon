@@ -9,7 +9,8 @@ import (
 )
 
 type PermissionsClinet struct {
-	*gorbac.RBAC
+	rbac        *gorbac.RBAC
+	permissions gorbac.Permissions
 }
 
 // map[RoleId]PermissionIds
@@ -21,7 +22,7 @@ var jsonInher map[string][]string
 var PermissionManager PermissionsClinet
 
 // Load roles information
-func (p PermissionsClinet) Init() {
+func PermissionsInit() {
 	if err := LoadJson("config/roles.json", &jsonRoles); err != nil {
 		log.Fatal(err)
 	}
@@ -47,9 +48,9 @@ func (p PermissionsClinet) Init() {
 			log.Fatal(err)
 		}
 	}
-	p.RBAC = rbac
-
-	if p.IsGranted("admin", permissions["getCourseData"], nil) {
+	PermissionManager.rbac = rbac
+	PermissionManager.permissions = permissions
+	if PermissionManager.rbac.IsGranted("admin", permissions["getCourseData"], nil) {
 		log.Println("Permissions Checked!")
 	}
 }

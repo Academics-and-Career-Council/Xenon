@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/mikespook/gorbac"
 	"github.com/spf13/viper"
 )
 
@@ -28,8 +27,9 @@ func isGQLAllowed(c *fiber.Ctx) error {
 	}
 	b := new(gqlBody)
 	json.Unmarshal(c.Request().Body(), b)
-	if PermissionManager.IsGranted(u.Role, gorbac.NewStdPermission(b.Query), nil) && !u.Banned {
-		if b.Query == "getReviews" && u.Credits < viper.GetInt("credits_unlock") {
+	q := Introspect(b.Query)
+	if PermissionManager.rbac.IsGranted(u.Role, PermissionManager.permissions[q], nil) && !u.Banned {
+		if q == "getReviews" && u.Credits < viper.GetInt("credits_unlock") {
 			vars := map[string]string{}
 			json.Unmarshal([]byte(b.Variables), &vars)
 			res := IntrospectGetReviews(*u, vars["course"])

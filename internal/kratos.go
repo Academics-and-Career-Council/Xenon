@@ -60,7 +60,7 @@ func (ory *Ory) CreateUser(username string) error {
 func (ory *Ory) RecoverUser(username string) error {
 	filter := bson.D{{Key: "username", Value: username}}
 	u := &User{}
-	err := MongoClient.Collection("ug").FindOne(context.TODO(), filter).Decode(u)
+	err := MongoClient.Users.Collection("ug").FindOne(context.TODO(), filter).Decode(u)
 	if err != nil {
 		log.Printf("Unable to check access : %v", err)
 	}

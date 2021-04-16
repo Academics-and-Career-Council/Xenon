@@ -9,10 +9,10 @@ import (
 
 func init() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	internal.PermissionManager.Init()
-	internal.MongoClient.Connect()
+	internal.PermissionsInit()
+	internal.ConnectMongo()
 	internal.OryClient.Connect()
-	internal.BadgerDB.Init()
+	internal.Init()
 }
 
 func main() {

@@ -31,7 +31,7 @@ func IntrospectGetReviews(u UserMetaData, course string) bool {
 
 func getUser(email string) (*UserMetaData, error) {
 	u := &UserMetaData{}
-	err := BadgerDB.Get(email, u)
+	err := BadgerDB.Get("permiso:"+email, u)
 	if err != nil {
 		err = MongoClient.getUser(email, u)
 		BadgerDB.Save("permiso:"+email, u)
