@@ -9,8 +9,8 @@ import (
 )
 
 type gqlBody struct {
-	Query     string `json:"query"`
-	Variables string `json:"variables"`
+	Query     string            `json:"query"`
+	Variables map[string]string `json:"variables"`
 }
 
 func Introspect(q string) string {

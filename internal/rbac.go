@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/mikespook/gorbac"
+	"github.com/spf13/viper"
 )
 
 type PermissionsClinet struct {
@@ -23,11 +24,11 @@ var PermissionManager PermissionsClinet
 
 // Load roles information
 func PermissionsInit() {
-	if err := LoadJson("config/roles.json", &jsonRoles); err != nil {
+	if err := LoadJson(viper.GetString("rbac.roles_path"), &jsonRoles); err != nil {
 		log.Fatal(err)
 	}
 	// Load inheritance information
-	if err := LoadJson("config/inher.json", &jsonInher); err != nil {
+	if err := LoadJson(viper.GetString("rbac.inher_path"), &jsonInher); err != nil {
 		log.Fatal(err)
 	}
 	rbac := gorbac.New()

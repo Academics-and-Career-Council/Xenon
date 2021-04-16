@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/dgraph-io/badger/v3"
+	"github.com/spf13/viper"
 )
 
 type badgerClient struct {
@@ -15,15 +16,10 @@ type badgerClient struct {
 var BadgerDB badgerClient
 
 func Init() {
-	db, err := badger.Open(badger.DefaultOptions("./cache"))
+	db, err := badger.Open(badger.DefaultOptions(viper.GetString("badger_dir")))
 	if err != nil {
 		log.Fatal(err)
 	}
-	// b.db = db
-	// err = b.db.View(func(txn *badger.Txn) error {
-	// 	_, err := txn.Get([]byte("hello"))
-	// 	return err
-	// })
 	BadgerDB = badgerClient{db}
 }
 
@@ -44,17 +40,17 @@ func (b badgerClient) Get(key string, dest interface{}) error {
 	var p []byte
 
 	err := b.d.View(func(txn *badger.Txn) error {
-		_, err := txn.Get([]byte(key))
+		item, err := txn.Get([]byte(key))
 
 		if err != nil {
 			log.Print(err)
 			return err
 		}
 
-		// err = item.Value(func(val []byte) error {
-		// 	p = append([]byte{}, val...)
-		// 	return err
-		// })
+		err = item.Value(func(val []byte) error {
+			p = append([]byte{}, val...)
+			return err
+		})
 
 		return nil
 	})

@@ -26,22 +26,28 @@ func isGQLAllowed(c *fiber.Ctx) error {
 		return c.SendStatus(403)
 	}
 	b := new(gqlBody)
-	json.Unmarshal(c.Request().Body(), b)
+	err = json.Unmarshal(c.Request().Body(), b)
+	if err != nil {
+		log.Print("Malformed GraphQL Query")
+		return c.SendStatus(403)
+	}
 	q := Introspect(b.Query)
 	if PermissionManager.rbac.IsGranted(u.Role, PermissionManager.permissions[q], nil) && !u.Banned {
 		if q == "getReviews" && u.Credits < viper.GetInt("credits_unlock") {
-			vars := map[string]string{}
-			json.Unmarshal([]byte(b.Variables), &vars)
-			res := IntrospectGetReviews(*u, vars["course"])
+			res := IntrospectGetReviews(*u, b.Variables["course"])
 			if res {
+				log.Printf("%s granted access for %s", email, q)
 				return c.SendStatus(200)
 			} else {
+				log.Printf("%s blocked access for %s : Insufficient Credits", email, b.Variables["course"])
 				return c.SendStatus(403)
 			}
 		} else {
+			log.Printf("%s granted access for %s", email, q)
 			return c.SendStatus(200)
 		}
 	} else {
+		log.Printf("%s blocked access for %s : Permission Denied", email, q)
 		return c.SendStatus(403)
 	}
 }

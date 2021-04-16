@@ -5,6 +5,7 @@ import (
 	"log"
 	"strings"
 
+	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -16,22 +17,8 @@ type mongoClient struct {
 
 var MongoClient = &mongoClient{}
 
-// func (m mongoClient) Connect() {
-// 	clientOptions := options.Client().ApplyURI("mongodb+srv://anc:courses@cluster0.x6adj.mongodb.net/students?retryWrites=true&w=majority")
-// 	client, err := mongo.Connect(context.TODO(), clientOptions)
-// 	if err != nil {
-// 		print(err.Error())
-// 	}
-// 	err = client.Ping(context.TODO(), nil)
-// 	if err != nil {
-// 		print(err.Error())
-// 	}
-// 	log.Printf("Connected to MongoDB!")
-// 	database := client.Database("primarydb")
-// }
-
 func ConnectMongo() {
-	MongoClient.Users = connect("mongodb+srv://anc:courses@cluster0.x6adj.mongodb.net/students?retryWrites=true&w=majority", "primarydb")
+	MongoClient.Users = connect(viper.GetString("mongo_url"), "primarydb")
 }
 
 func connect(url string, dbname string) *mongo.Database {
