@@ -1,0 +1,14 @@
+{
+  "secretary": [
+    "student"
+  ],
+  "manager": [
+    "secretary",
+    "student"
+  ],
+  "admin": [
+    "manager",
+    "secretary",
+    "student"
+  ]
+}

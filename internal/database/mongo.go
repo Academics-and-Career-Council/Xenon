@@ -1,4 +1,4 @@
-package internal
+package database
 
 import (
 	"context"
@@ -36,14 +36,15 @@ func connect(url string, dbname string) *mongo.Database {
 	return database
 }
 
-func (m mongoClient) getUser(email string, dest interface{}) error {
+func (m mongoClient) GetUser(email string) (User, error) {
+	u := &User{}
 	e := strings.Split(email, "@")[0]
 	filter := bson.D{{Key: "username", Value: e}}
-	err := MongoClient.Users.Collection("students").FindOne(context.TODO(), filter).Decode(dest)
+	err := MongoClient.Users.Collection("students").FindOne(context.TODO(), filter).Decode(u)
 	if err != nil {
 		log.Printf("Unable to check access : %v", err)
 	}
-	return err
+	return *u, err
 }
 
 func (m mongoClient) SetID(key string, id string, username string) error {
@@ -57,8 +58,18 @@ func (m mongoClient) SetID(key string, id string, username string) error {
 	return err
 }
 
+func (m mongoClient) BulkWriteInStudents(roles []mongo.WriteModel) error {
+
+	_, err := m.Users.Collection("students").BulkWrite(context.TODO(), roles)
+	if err != nil {
+		log.Printf("Unable to check access : %v", err)
+	}
+	return err
+}
+
 func (m mongoClient) CanRegister(username string) (bool, error) {
 	u := &User{}
+	// m.Users.Collection("ug").BulkWrite()
 	name := strings.Replace(username, " ", "", -1)
 	filter := bson.M{"username": name}
 	err := m.Users.Collection("students").FindOne(context.TODO(), filter).Decode(u)
@@ -67,4 +78,14 @@ func (m mongoClient) CanRegister(username string) (bool, error) {
 		log.Printf("Unable to check access for %s: %v", name, err)
 	}
 	return true, err
+}
+
+func (m mongoClient) ResetAllRoles() error {
+	filter := bson.M{}
+	update := bson.D{{Key: "$set", Value: bson.D{{Key: "role", Value: "student"}}}}
+	_, err := m.Users.Collection("ug").UpdateMany(context.TODO(), filter, update)
+	if err != nil {
+		log.Printf("Unable to reset roles: %v", err)
+	}
+	return err
 }

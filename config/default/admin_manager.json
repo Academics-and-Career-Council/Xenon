@@ -1,0 +1,6 @@
+{
+  "namespace": "groups",
+  "object": "manager",
+  "relation": "member",
+  "subject": "groups:admin#member"
+}

@@ -1,0 +1,6 @@
+{
+    "namespace": "resources",
+    "object": "job",
+    "relation": "read",
+    "subject": "groups:student#member"
+}

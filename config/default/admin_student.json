@@ -1,0 +1,6 @@
+{
+  "namespace": "groups",
+  "object": "student",
+  "relation": "member",
+  "subject": "groups:admin#member"
+}
