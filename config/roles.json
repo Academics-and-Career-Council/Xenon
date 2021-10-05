@@ -1,7 +1,0 @@
-{
-  "user": ["getCourseData"],
-  "secretary": ["add-photo", "edit-photo"],
-  "manager": ["del-text", "del-photo"],
-  "admin": ["yeah"],
-  "company_owner": []
-}

@@ -1,5 +1,0 @@
-{
-  "secretary": ["user"],
-  "manager": ["secretary"],
-  "admin": ["manager"]
-}

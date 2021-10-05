@@ -1,7 +1,8 @@
-package internal
+package services
 
 import (
 	"encoding/base64"
+	"log"
 	"net/smtp"
 	"strings"
 
@@ -9,10 +10,10 @@ import (
 )
 
 func SendMail(subject, body string, to []string) error {
+	log.Println(subject, to, body)
 	addr := viper.GetString("smtp.host")
 	from := viper.GetString("smtp.mail")
 	r := strings.NewReplacer("\r\n", "", "\r", "", "\n", "", "%0a", "", "%0d", "")
-
 	c, err := smtp.Dial(addr)
 	if err != nil {
 		return err
