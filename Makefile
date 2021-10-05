@@ -1,6 +1,6 @@
 run:
 	go run main.go
 
-build:
+install:
 	go mod download
 	go build -o build/xenon main.go
