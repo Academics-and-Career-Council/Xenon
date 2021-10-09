@@ -1,9 +1,12 @@
-FROM golang:latest
-LABEL MAINTAINER="Shivam Malhotra"
-LABEL VERSION="0.0.1"
-
-# Build the server
+FROM golang:alpine AS builder
+RUN apk update && apk add --no-cache git
 RUN mkdir /server
 WORKDIR /server
 COPY ./ ./
 RUN make install
+FROM scratch
+LABEL MAINTAINER="Shivam Malhotra"
+LABEL VERSION="0.0.1"
+
+COPY --from=builder /server/build/xenon /go/bin/xenon
+ENTRYPOINT ["/go/bin/xenon"]
