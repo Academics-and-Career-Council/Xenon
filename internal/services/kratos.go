@@ -41,7 +41,7 @@ func (k kratos) RecoverUser(username string) error {
 		return err
 	}
 	url := link.GetRecoveryLink()
-	message := "Dear User,\nPlease use the following link to recover your account:\n" + url
+	message := "<p>Dear User,<br/>Please use the following link to recover your account:<br/><a href=\"" + url + "\">" + url + "</a></p>"
 
 	err = SendMail("Account Recovery", message, []string{username + "@iitk.ac.in"})
 	return err
