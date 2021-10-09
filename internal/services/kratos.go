@@ -5,7 +5,6 @@ import (
 	"log"
 
 	"github.com/AnC-IITK/Xenon/internal/database"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/gofiber/fiber/v2"
 	client "github.com/ory/kratos-client-go"
 	"go.mongodb.org/mongo-driver/bson"
@@ -18,14 +17,9 @@ type kratos struct {
 var KratosClient kratos
 
 func ConntectKratos() {
-	// client.newgor
-	// client.New
 	KratosClient = kratos{client.NewAPIClient(&client.Configuration{
-		// Host:    "localhost:4434",
-		// Scheme:  "http",
 		Servers: client.ServerConfigurations{client.ServerConfiguration{URL: "http://localhost:4434"}},
 	})}
-	spew.Dump(KratosClient)
 }
 
 func (k kratos) DeleteIdentity(id string) {

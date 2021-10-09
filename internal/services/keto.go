@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"log"
 
 	"github.com/davecgh/go-spew/spew"
 	acl "github.com/ory/keto/proto/ory/keto/acl/v1alpha1"
@@ -20,11 +21,11 @@ var KetoClient ketoClient
 func init() {
 	conn1, err := grpc.Dial("127.0.0.1:4466", grpc.WithInsecure())
 	if err != nil {
-		panic(err.Error())
+		log.Println(err)
 	}
 	conn2, err := grpc.Dial("127.0.0.1:4467", grpc.WithInsecure())
 	if err != nil {
-		panic(err.Error())
+		log.Println(err)
 	}
 	KetoClient = ketoClient{
 		acl.NewReadServiceClient(conn1),

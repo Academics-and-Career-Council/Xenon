@@ -18,7 +18,7 @@ type mongoClient struct {
 var MongoClient = &mongoClient{}
 
 func ConnectMongo() {
-	MongoClient.Users = connect(viper.GetString("mongo_url"), "primarydb")
+	MongoClient.Users = connect(viper.GetString("mongo.url"), viper.GetString("mongo.database"))
 }
 
 func connect(url string, dbname string) *mongo.Database {
@@ -40,7 +40,7 @@ func (m mongoClient) GetUser(email string) (User, error) {
 	u := &User{}
 	e := strings.Split(email, "@")[0]
 	filter := bson.D{{Key: "username", Value: e}}
-	err := MongoClient.Users.Collection("students").FindOne(context.TODO(), filter).Decode(u)
+	err := MongoClient.Users.Collection("ug").FindOne(context.TODO(), filter).Decode(u)
 	if err != nil {
 		log.Printf("Unable to check access : %v", err)
 	}
@@ -51,7 +51,7 @@ func (m mongoClient) SetID(key string, id string, username string) error {
 	u := &User{}
 	filter := bson.D{{Key: "username", Value: username}}
 	update := bson.D{{Key: "$set", Value: bson.D{{Key: key, Value: id}}}}
-	err := m.Users.Collection("students").FindOneAndUpdate(context.TODO(), filter, update).Decode(u)
+	err := m.Users.Collection("ug").FindOneAndUpdate(context.TODO(), filter, update).Decode(u)
 	if err != nil {
 		log.Printf("Unable to check access : %v", err)
 	}
@@ -60,7 +60,7 @@ func (m mongoClient) SetID(key string, id string, username string) error {
 
 func (m mongoClient) BulkWriteInStudents(roles []mongo.WriteModel) error {
 
-	_, err := m.Users.Collection("students").BulkWrite(context.TODO(), roles)
+	_, err := m.Users.Collection("ug").BulkWrite(context.TODO(), roles)
 	if err != nil {
 		log.Printf("Unable to check access : %v", err)
 	}
@@ -69,10 +69,9 @@ func (m mongoClient) BulkWriteInStudents(roles []mongo.WriteModel) error {
 
 func (m mongoClient) CanRegister(username string) (bool, error) {
 	u := &User{}
-	// m.Users.Collection("ug").BulkWrite()
 	name := strings.Replace(username, " ", "", -1)
 	filter := bson.M{"username": name}
-	err := m.Users.Collection("students").FindOne(context.TODO(), filter).Decode(u)
+	err := m.Users.Collection("ug").FindOne(context.TODO(), filter).Decode(u)
 	// TODO Implement banning
 	if err != nil {
 		log.Printf("Unable to check access for %s: %v", name, err)

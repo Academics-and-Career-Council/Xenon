@@ -8,4 +8,5 @@ type User struct {
 	RollNo     string `bson:"rollno"`
 	Department string `bson:"department"`
 	KratosID   string `bson:"kid"`
+	EmailID    string `bson:"email"`
 }
