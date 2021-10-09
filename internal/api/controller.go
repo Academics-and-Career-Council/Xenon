@@ -20,7 +20,7 @@ import (
 )
 
 func whoami(c *fiber.Ctx) error {
-	email := c.Get("X-IITK-Email")
+	email := c.Get("X-Email")
 	headers := make(map[string]string)
 	c.Request().Header.VisitAll(func(k, v []byte) {
 		headers[string(k)] = string(v)
