@@ -1,5 +1,5 @@
 FROM golang:alpine AS builder
-RUN apk update && apk add --no-cache git
+RUN apk update && apk add --no-cache git make build-essential
 RUN mkdir /server
 WORKDIR /server
 COPY ./ ./
