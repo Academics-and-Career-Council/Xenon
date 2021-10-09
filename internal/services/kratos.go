@@ -7,6 +7,7 @@ import (
 	"github.com/AnC-IITK/Xenon/internal/database"
 	"github.com/gofiber/fiber/v2"
 	client "github.com/ory/kratos-client-go"
+	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -18,7 +19,7 @@ var KratosClient kratos
 
 func ConntectKratos() {
 	KratosClient = kratos{client.NewAPIClient(&client.Configuration{
-		Servers: client.ServerConfigurations{client.ServerConfiguration{URL: "http://localhost:4434"}},
+		Servers: client.ServerConfigurations{client.ServerConfiguration{URL: viper.GetString("kratos.admin_url")}},
 	})}
 }
 
