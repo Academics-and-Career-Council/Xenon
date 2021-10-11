@@ -23,7 +23,7 @@ func whoami(c *fiber.Ctx) error {
 	email := c.Get("X-Email")
 	u, err := database.MongoClient.GetUser(email)
 	if err != nil {
-		return c.SendStatus(404)
+		return fiber.NewError(404, fmt.Sprint(err))
 	}
 	return c.Status(200).JSON(u)
 }
@@ -76,7 +76,7 @@ func Register(ctx *fiber.Ctx) error {
 	if err != nil {
 		return fiber.NewError(code, fmt.Sprint(err))
 	}
-	return ctx.SendStatus(201)
+	return ctx.Status(201).JSON(fiber.Map{"message": "Registered Successfully"})
 }
 
 func Recover(ctx *fiber.Ctx) error {

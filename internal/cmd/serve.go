@@ -25,7 +25,30 @@ var serveCmd = &cobra.Command{
 }
 
 func Serve() error {
-	app := fiber.New()
+	// Create a new fiber instance with custom config
+	app := fiber.New(fiber.Config{
+		// Override default error handler
+		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
+			// Status code defaults to 500
+			code := fiber.StatusInternalServerError
+
+			// Retrieve the custom status code if it's an fiber.*Error
+			if e, ok := err.(*fiber.Error); ok {
+				code = e.Code
+			}
+
+			// Send custom error page
+			err = ctx.Status(code).JSON(fiber.Map{"message": err.Error()})
+			if err != nil {
+				// In case the SendFile fails
+				return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Internal Server Error"})
+			}
+
+			// Return from handler
+			return nil
+		},
+	})
+
 	api.SetupRoutes(app)
 	err := app.Listen(":5010")
 	return err
