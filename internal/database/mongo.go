@@ -38,8 +38,7 @@ func connect(url string, dbname string) *mongo.Database {
 
 func (m mongoClient) GetUser(email string) (User, error) {
 	u := &User{}
-	e := strings.Split(email, "@")[0]
-	filter := bson.D{{Key: "email", Value: e}}
+	filter := bson.D{{Key: "email", Value: email}}
 	err := MongoClient.Users.Collection("ug").FindOne(context.TODO(), filter).Decode(u)
 	if err != nil {
 		log.Printf("Unable to check access : %v", err)

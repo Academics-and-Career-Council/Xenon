@@ -21,16 +21,11 @@ import (
 
 func whoami(c *fiber.Ctx) error {
 	email := c.Get("X-Email")
-	headers := make(map[string]string)
-	c.Request().Header.VisitAll(func(k, v []byte) {
-		headers[string(k)] = string(v)
-	})
-	log.Println(headers)
 	u, err := database.MongoClient.GetUser(email)
 	if err != nil {
-		return c.Status(200).JSON(u)
+		return c.SendStatus(404)
 	}
-	return c.SendStatus(404)
+	return c.Status(200).JSON(u)
 }
 
 func isGQLAllowed(c *fiber.Ctx) error {
