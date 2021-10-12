@@ -70,7 +70,7 @@ func (k kratos) CreateUser(username string) (int, error) {
 		return r.StatusCode, err
 	}
 	url := link.GetRecoveryLink()
-	message := "Dear User,\nPlease use the following link to recover your account:\n" + url
+	message := "<p>Dear User,<br/>Please use the following link to verify your account:<br/><a href=\"" + url + "\">" + url + "</a></p>"
 	err = SendMail("New Registration", message, []string{username + "@iitk.ac.in"})
 	if err != nil {
 		log.Printf("SMTP Error : %v", err)
