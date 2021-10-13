@@ -19,6 +19,7 @@ var serveCmd = &cobra.Command{
 		// gql.InitializeACL()
 		database.ConnectMongo()
 		services.ConntectKratos()
+		services.Init()
 		err := Serve()
 		return err
 	},

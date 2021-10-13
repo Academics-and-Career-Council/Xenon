@@ -21,10 +21,16 @@ import (
 
 func whoami(c *fiber.Ctx) error {
 	email := c.Get("X-Email")
-	u, err := database.MongoClient.GetUser(email)
+	u := database.User{}
+	err := services.BadgerDB.Get("user:"+email, u)
+	if err == nil {
+		return c.Status(200).JSON(u)
+	}
+	u, err = database.MongoClient.GetUser(email)
 	if err != nil {
 		return fiber.NewError(404, fmt.Sprint(err))
 	}
+	services.BadgerDB.Save("user:"+email, u)
 	return c.Status(200).JSON(u)
 }
 
@@ -71,7 +77,11 @@ func isGQLAllowed(c *fiber.Ctx) error {
 
 func Register(ctx *fiber.Ctx) error {
 	u := strings.ReplaceAll(ctx.FormValue("username"), " ", "")
-	log.Println(u)
+	r := ctx.FormValue("token")
+	err := services.VerifyCaptcha(r)
+	if err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, "Unable to verify captcha")
+	}
 	code, err := services.KratosClient.CreateUser(u)
 	if err != nil {
 		return fiber.NewError(code, fmt.Sprint(err))
