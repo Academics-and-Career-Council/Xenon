@@ -9,4 +9,5 @@ type User struct {
 	Department string `bson:"branch" json:"department"`
 	KratosID   string `bson:"kid" json:"registration_id"`
 	EmailID    string `bson:"email" json:"email"`
+	Role       string `bson:"role" json:"role"`
 }
