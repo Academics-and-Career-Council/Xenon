@@ -3,7 +3,6 @@ module github.com/AnC-IITK/Xenon
 go 1.16
 
 require (
-	github.com/davecgh/go-spew v1.1.1
 	github.com/dgraph-io/badger/v3 v3.2011.1
 	github.com/gofiber/fiber/v2 v2.7.1
 	github.com/mitchellh/go-homedir v1.1.0

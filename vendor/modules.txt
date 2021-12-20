@@ -22,9 +22,6 @@ github.com/aws/aws-sdk-go/private/protocol
 github.com/aws/aws-sdk-go/private/protocol/rest
 # github.com/cespare/xxhash v1.1.0
 github.com/cespare/xxhash
-# github.com/davecgh/go-spew v1.1.1
-## explicit
-github.com/davecgh/go-spew/spew
 # github.com/dgraph-io/badger/v3 v3.2011.1
 ## explicit
 github.com/dgraph-io/badger/v3

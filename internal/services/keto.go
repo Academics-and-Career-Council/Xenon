@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 
-	"github.com/davecgh/go-spew/spew"
 	acl "github.com/ory/keto/proto/ory/keto/acl/v1alpha1"
 	"github.com/spf13/viper"
 	"google.golang.org/grpc"
@@ -44,7 +43,9 @@ func CheckPermission(namespace string, resource string, action string, subject s
 		Relation:  action,
 		Subject:   &acl.Subject{Ref: &acl.Subject_Id{Id: subject}},
 	})
-	spew.Dump(r.GetAllowed())
+	if err != nil {
+		return false, err
+	}
 	return r.Allowed, err
 }
 
