@@ -2,5 +2,9 @@
   "namespace": "groups",
   "object": "student",
   "relation": "member",
-  "subject": "groups:manager#member"
+  "subject_set": {
+    "namespace": "groups",
+    "object": "manager",
+    "relation": "member"
+  }
 }

@@ -1,6 +1,10 @@
 {
-    "namespace": "resources",
-    "object": "job",
-    "relation": "read",
-    "subject": "groups:student#member"
+  "namespace": "careers",
+  "object": "job",
+  "relation": "read",
+  "subject_set": {
+    "namespace": "groups",
+    "object": "student",
+    "relation": "member"
+  }
 }

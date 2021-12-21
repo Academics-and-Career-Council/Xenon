@@ -6,6 +6,7 @@ import (
 
 	"github.com/davecgh/go-spew/spew"
 	acl "github.com/ory/keto/proto/ory/keto/acl/v1alpha1"
+	"github.com/spf13/viper"
 	"google.golang.org/grpc"
 )
 
@@ -19,11 +20,11 @@ type ketoClient struct {
 var KetoClient ketoClient
 
 func init() {
-	conn1, err := grpc.Dial("127.0.0.1:4466", grpc.WithInsecure())
+	conn1, err := grpc.Dial(viper.GetString("keto_url")+":4466", grpc.WithInsecure())
 	if err != nil {
 		log.Println(err)
 	}
-	conn2, err := grpc.Dial("127.0.0.1:4467", grpc.WithInsecure())
+	conn2, err := grpc.Dial(viper.GetString("keto_url")+":4467", grpc.WithInsecure())
 	if err != nil {
 		log.Println(err)
 	}
