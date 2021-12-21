@@ -21,11 +21,11 @@ var KetoClient ketoClient
 
 func ConnectKeto() {
 	log.Println(viper.GetString("keto.read"), viper.GetString("keto.write"))
-	conn1, err := grpc.Dial(viper.GetString("keto.read")+":4466", grpc.WithInsecure())
+	conn1, err := grpc.Dial(viper.GetString("keto.read"), grpc.WithInsecure())
 	if err != nil {
 		log.Println(err)
 	}
-	conn2, err := grpc.Dial(viper.GetString("keto.write")+":4467", grpc.WithInsecure())
+	conn2, err := grpc.Dial(viper.GetString("keto.write"), grpc.WithInsecure())
 	if err != nil {
 		log.Println(err)
 	}
