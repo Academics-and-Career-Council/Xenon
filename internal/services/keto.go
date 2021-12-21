@@ -19,7 +19,7 @@ type ketoClient struct {
 
 var KetoClient ketoClient
 
-func init() {
+func ConnectKeto() {
 	conn1, err := grpc.Dial(viper.GetString("keto_url")+":4466", grpc.WithInsecure())
 	if err != nil {
 		log.Println(err)
