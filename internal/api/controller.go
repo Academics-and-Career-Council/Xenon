@@ -36,7 +36,7 @@ func whoami(c *fiber.Ctx) error {
 
 func isGQLAllowed(c *fiber.Ctx) error {
 	// Get Email Header Required for Authentication
-	email := c.Get("X-IITK-Email")
+	email := c.Get("X-Email")
 
 	// Parse the request
 	b := new(gql.GqlBody)
