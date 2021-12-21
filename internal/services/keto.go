@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	acl "github.com/ory/keto/proto/ory/keto/acl/v1alpha1"
@@ -37,6 +38,7 @@ func init() {
 }
 
 func CheckPermission(namespace string, resource string, action string, subject string) (bool, error) {
+	log.Println(fmt.Sprintf("Namespace: %s, Resources:%s,Action:%s,Subject:%s", namespace, resource, action, subject))
 	r, err := KetoClient.Check(context.TODO(), &acl.CheckRequest{
 		Namespace: namespace,
 		Object:    resource,
