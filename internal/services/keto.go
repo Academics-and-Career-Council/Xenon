@@ -20,12 +20,12 @@ type ketoClient struct {
 var KetoClient ketoClient
 
 func ConnectKeto() {
-	log.Panicln(viper.GetString("keto.read"), viper.GetString("keto.write"))
-	conn1, err := grpc.Dial(viper.GetString("keto.read"), grpc.WithInsecure())
+	log.Println(viper.GetString("keto.read"), viper.GetString("keto.write"))
+	conn1, err := grpc.Dial(viper.GetString("keto.read")+":4466", grpc.WithInsecure())
 	if err != nil {
 		log.Println(err)
 	}
-	conn2, err := grpc.Dial(viper.GetString("keto.write"), grpc.WithInsecure())
+	conn2, err := grpc.Dial(viper.GetString("keto.write")+":4467", grpc.WithInsecure())
 	if err != nil {
 		log.Println(err)
 	}
