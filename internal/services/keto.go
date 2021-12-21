@@ -44,6 +44,7 @@ func CheckPermission(namespace string, resource string, action string, subject s
 		Subject:   &acl.Subject{Ref: &acl.Subject_Id{Id: subject}},
 	})
 	if err != nil {
+		log.Println(err, r.String())
 		return false, err
 	}
 	return r.Allowed, err
