@@ -9,8 +9,8 @@ import (
 )
 
 type GqlBody struct {
-	Query     string            `json:"query"`
-	Variables map[string]string `json:"variables"`
+	Query     string                 `json:"query"`
+	Variables map[string]interface{} `json:"variables"`
 }
 
 func Introspect(g GqlBody) (string, map[string]string) {
@@ -18,7 +18,13 @@ func Introspect(g GqlBody) (string, map[string]string) {
 	a := query.Operations.ForName("").SelectionSet[0]
 	e := reflect.ValueOf(a).Elem()
 	n := e.FieldByName("Name").String()
-	m := ParseInputs(e, g.Variables)
+	v := map[string]string{}
+	for key, element := range g.Variables {
+		if s, ok := element.(string); ok {
+			v[key] = s
+		}
+	}
+	m := ParseInputs(e, v)
 	return n, m
 }
 
