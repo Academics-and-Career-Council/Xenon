@@ -3,3 +3,6 @@ cache/
 config.yaml
 config/*yml
 config/
+database.db 
+keto.yml
+schema.sql

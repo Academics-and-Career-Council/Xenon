@@ -3,7 +3,7 @@ import argparse
 import os
 from typing import Dict
 
-rt = {"namespace": "groups", "object": "", "relation": "member", "subject": ""}
+rt = {"namespace": "groups", "object": "", "relation": "member", "subject_set": {"namespace": "groups", "object": "", "relation": "member"}}
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -22,7 +22,7 @@ if __name__ == "__main__":
     for key in inheritance:
         for role in inheritance[key]:
             rt["object"] = role
-            rt["subject"] = "groups:{}#member".format(key)
+            rt["subject_set"]["object"] = key
             with open(
                 os.path.join(args.outfolder, "{}_{}.json".format(key, role)), "w"
             ) as f:
