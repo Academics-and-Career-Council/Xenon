@@ -65,6 +65,7 @@ func isGQLAllowed(c *fiber.Ctx) error {
 	// Check Permission using goRPC on Ory Keto
 	log.Print(ketoACL.Namespace, result, ketoACL.Relation, email)
 	allowed, err := services.CheckPermission(ketoACL.Namespace, result, ketoACL.Relation, email)
+	log.Println(allowed,err)
 	if err != nil {
 		log.Print("Given Action/Subject/Resource does not exist!")
 		return c.SendStatus(403)
