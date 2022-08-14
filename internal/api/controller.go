@@ -7,11 +7,13 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"os"
 	"strings"
 
 	"github.com/AnC-IITK/Xenon/internal/database"
 	"github.com/AnC-IITK/Xenon/internal/gql"
 	"github.com/AnC-IITK/Xenon/internal/services"
+	"github.com/gocarina/gocsv"
 	"github.com/gofiber/fiber/v2"
 	acl "github.com/ory/keto/proto/ory/keto/acl/v1alpha1"
 	"github.com/spf13/viper"
@@ -65,7 +67,7 @@ func isGQLAllowed(c *fiber.Ctx) error {
 	// Check Permission using goRPC on Ory Keto
 	log.Print(ketoACL.Namespace, result, ketoACL.Relation, email)
 	allowed, err := services.CheckPermission(ketoACL.Namespace, result, ketoACL.Relation, email)
-	log.Println(allowed,err)
+	log.Println(allowed, err)
 	if err != nil {
 		log.Print("Given Action/Subject/Resource does not exist!")
 		return c.SendStatus(403)
@@ -140,7 +142,44 @@ func UpdateAdministrators(ctx *fiber.Ctx) error {
 	}
 	database.MongoClient.BulkWriteInStudents(mr)
 	log.Println(mr)
-	err = services.InsertTuples(rt)
+	err = services.InsertTuples(ctx.Context(), rt)
+	if err != nil {
+		return fiber.NewError(fiber.StatusServiceUnavailable, fmt.Sprint(err))
+	}
+	return ctx.SendStatus(200)
+}
+
+func InsertUsers(ctx *fiber.Ctx) error {
+	k := strings.ReplaceAll(ctx.FormValue("key"), " ", "")
+	if k != viper.GetString("key") {
+		return ctx.SendStatus(403)
+	}
+	f, err := ctx.FormFile("csv")
+	if err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, fmt.Sprint(err))
+	}
+	b, err := f.Open()
+	if err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, fmt.Sprint(err))
+	}
+	users := []*database.User{}
+	if err := gocsv.UnmarshalFile(b.(*os.File), &users); err != nil { // Load clients from file
+		return fiber.NewError(fiber.StatusBadRequest, fmt.Sprint(err))
+	}
+
+	rt := []*acl.RelationTupleDelta{}
+	mr := []interface{}{}
+	for _, user := range users {
+		if !strings.Contains(user.EmailID, "@iitk.ac.in") || (user.Username+"@iitk.ac.in" != user.EmailID) {
+			log.Println(fmt.Sprintf("Skipping %s, invalid parameters", user.Name))
+		}
+		t := &acl.RelationTuple{Namespace: "groups", Object: user.Role, Relation: "member", Subject: &acl.Subject{Ref: &acl.Subject_Id{Id: user.Username}}}
+		rt = append(rt, &acl.RelationTupleDelta{RelationTuple: t, Action: acl.RelationTupleDelta_INSERT})
+		user.Banned = false
+		mr = append(mr, &user)
+	}
+	database.MongoClient.Users.Collection("ug").InsertMany(ctx.Context(), mr)
+	err = services.InsertTuples(ctx.Context(), rt)
 	if err != nil {
 		return fiber.NewError(fiber.StatusServiceUnavailable, fmt.Sprint(err))
 	}

@@ -53,7 +53,7 @@ func CheckPermission(namespace string, resource string, action string, subject s
 	return r.Allowed, err
 }
 
-func InsertTuples(rt []*acl.RelationTupleDelta) error {
+func InsertTuples(ctx context.Context, rt []*acl.RelationTupleDelta) error {
 	_, err := KetoClient.TransactRelationTuples(context.TODO(),
 		&acl.TransactRelationTuplesRequest{
 			RelationTupleDeltas: rt,

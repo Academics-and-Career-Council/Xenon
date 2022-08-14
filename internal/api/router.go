@@ -10,4 +10,5 @@ func SetupRoutes(app *fiber.App) {
 	app.Post("/register", Register)
 	app.Post("/recover", Recover)
 	app.Post("/admin/update", UpdateAdministrators)
+	app.Put("/admin/insert", InsertUsers)
 }

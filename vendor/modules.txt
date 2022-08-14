@@ -42,6 +42,9 @@ github.com/dustin/go-humanize
 github.com/fsnotify/fsnotify
 # github.com/go-stack/stack v1.8.0
 github.com/go-stack/stack
+# github.com/gocarina/gocsv v0.0.0-20220729221910-a7386ae0b221
+## explicit
+github.com/gocarina/gocsv
 # github.com/gofiber/fiber/v2 v2.7.1
 ## explicit
 github.com/gofiber/fiber/v2

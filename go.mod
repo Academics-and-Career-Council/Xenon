@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	github.com/dgraph-io/badger/v3 v3.2011.1
+	github.com/gocarina/gocsv v0.0.0-20220729221910-a7386ae0b221
 	github.com/gofiber/fiber/v2 v2.7.1
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/ory/keto/proto/ory/keto/acl/v1alpha1 v0.0.0-20210616104402-80e043246cf9
