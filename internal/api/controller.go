@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"os"
 	"strings"
 
 	"github.com/AnC-IITK/Xenon/internal/database"
@@ -163,7 +162,7 @@ func InsertUsers(ctx *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, fmt.Sprint(err))
 	}
 	users := []*database.User{}
-	if err := gocsv.UnmarshalFile(b.(*os.File), &users); err != nil { // Load clients from file
+	if err := gocsv.Unmarshal(b, &users); err != nil { // Load clients from file
 		return fiber.NewError(fiber.StatusBadRequest, fmt.Sprint(err))
 	}
 
