@@ -172,15 +172,15 @@ func InsertUsers(ctx *fiber.Ctx) error {
 		if !strings.Contains(user.EmailID, "@iitk.ac.in") || (user.Username+"@iitk.ac.in" != user.EmailID) {
 			log.Println(fmt.Sprintf("Skipping %s, invalid parameters", user.Name))
 		}
-		t := &acl.RelationTuple{Namespace: "groups", Object: user.Role, Relation: "member", Subject: &acl.Subject{Ref: &acl.Subject_Id{Id: user.Username}}}
+		t := &acl.RelationTuple{Namespace: "groups", Object: user.Role, Relation: "member", Subject: &acl.Subject{Ref: &acl.Subject_Id{Id: user.EmailID}}}
 		rt = append(rt, &acl.RelationTupleDelta{RelationTuple: t, Action: acl.RelationTupleDelta_INSERT})
 		user.Banned = false
 		mr = append(mr, &user)
 	}
-	_, err = database.MongoClient.Users.Collection(viper.GetString("mongo.collection")).InsertMany(ctx.Context(), mr)
-	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprint(err))
-	}
+	// _, err = database.MongoClient.Users.Collection(viper.GetString("mongo.collection")).InsertMany(ctx.Context(), mr)
+	// if err != nil {
+	// 	return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprint(err))
+	// }
 	err = services.InsertTuples(ctx.Context(), rt)
 	if err != nil {
 		return fiber.NewError(fiber.StatusServiceUnavailable, fmt.Sprint(err))
