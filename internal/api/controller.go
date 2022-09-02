@@ -177,10 +177,10 @@ func InsertUsers(ctx *fiber.Ctx) error {
 		user.Banned = false
 		mr = append(mr, &user)
 	}
-	// _, err = database.MongoClient.Users.Collection(viper.GetString("mongo.collection")).InsertMany(ctx.Context(), mr)
-	// if err != nil {
-	// 	return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprint(err))
-	// }
+	_, err = database.MongoClient.Users.Collection(viper.GetString("mongo.collection")).InsertMany(ctx.Context(), mr)
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprint(err))
+	}
 	err = services.InsertTuples(ctx.Context(), rt)
 	if err != nil {
 		return fiber.NewError(fiber.StatusServiceUnavailable, fmt.Sprint(err))
