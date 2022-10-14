@@ -12,6 +12,10 @@ type GqlBody struct {
 	Query     string                 `json:"query"`
 	Variables map[string]interface{} `json:"variables"`
 }
+type RestBody struct {
+	Email string `json:"email"`
+	Path  string `json:"path"`
+}
 
 func Introspect(g GqlBody) (string, map[string]string) {
 	query, _ := parser.ParseQuery(&ast.Source{Input: g.Query})

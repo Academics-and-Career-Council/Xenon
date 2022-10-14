@@ -77,16 +77,12 @@ func isGQLAllowed(c *fiber.Ctx) error {
 	return c.SendStatus(403)
 }
 
-type RestBody struct {
-	Email string `json:"X-Email"`
-	Path  string `json:"path"`
-}
-
 func isRESTAllowed(c *fiber.Ctx) error {
 	// Parse the request
-	body := new(RestBody)
+	body := new(gql.RestBody)
 	email := body.Email
-	path := body.Path
+	fullpath := strings.Split(body.Path, "/")
+	path := "/" + fullpath[len(fullpath)-1]
 	err := c.BodyParser(body)
 	if err != nil {
 		// Return Unauthorized on Malformed Request
