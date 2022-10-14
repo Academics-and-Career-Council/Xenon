@@ -81,8 +81,7 @@ func isRESTAllowed(c *fiber.Ctx) error {
 	// Parse the request
 	body := new(gql.RestBody)
 	email := body.Email
-	fullpath := strings.Split(body.Path, "/")
-	path := "/" + fullpath[len(fullpath)-2] + "/" + fullpath[len(fullpath)-1]
+	path := body.Path.Path
 	err := c.BodyParser(body)
 	if err != nil {
 		// Return Unauthorized on Malformed Request
