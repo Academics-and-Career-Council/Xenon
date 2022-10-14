@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"net/url"
 	"strings"
 
 	"github.com/AnC-IITK/Xenon/internal/database"
@@ -66,6 +67,37 @@ func isGQLAllowed(c *fiber.Ctx) error {
 	// Check Permission using goRPC on Ory Keto
 	log.Print(ketoACL.Namespace, result, ketoACL.Relation, email)
 	allowed, err := services.CheckPermission(ketoACL.Namespace, result, ketoACL.Relation, email)
+	log.Println(allowed, err)
+	if err != nil {
+		log.Print("Given Action/Subject/Resource does not exist!")
+		return c.SendStatus(403)
+	}
+	if allowed {
+		return c.SendStatus(200)
+	}
+	return c.SendStatus(403)
+}
+
+func isRESTAllowed(c *fiber.Ctx) error {
+	// Parse the request
+	body := new(gql.RestBody)
+	email := body.Email
+	fullpath, _ := url.ParseRequestURI(body.Path)
+	path := fullpath.Path
+	err := c.BodyParser(body)
+	if err != nil {
+		// Return Unauthorized on Malformed Request
+		log.Print("Malformed Rest Query")
+		return c.SendStatus(403)
+	}
+
+	// Fetch the corresponding Access Control List by Path
+	ketoACL := gql.ACL[path]
+
+	log.Println(ketoACL, email)
+	// Check Permission using goRPC on Ory Keto
+	log.Print(ketoACL.Namespace, path, ketoACL.Relation, email)
+	allowed, err := services.CheckPermission(ketoACL.Namespace, path, ketoACL.Relation, email)
 	log.Println(allowed, err)
 	if err != nil {
 		log.Print("Given Action/Subject/Resource does not exist!")
