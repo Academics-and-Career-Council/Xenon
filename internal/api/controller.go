@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"net/url"
 	"strings"
 
 	"github.com/AnC-IITK/Xenon/internal/database"
@@ -81,7 +82,8 @@ func isRESTAllowed(c *fiber.Ctx) error {
 	// Parse the request
 	body := new(gql.RestBody)
 	email := body.Email
-	path := body.Path.Path
+	fullpath, _ := url.ParseRequestURI(body.Path)
+	path := fullpath.Path
 	err := c.BodyParser(body)
 	if err != nil {
 		// Return Unauthorized on Malformed Request

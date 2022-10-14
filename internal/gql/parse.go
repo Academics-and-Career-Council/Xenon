@@ -2,7 +2,6 @@ package gql
 
 import (
 	"log"
-	"net/url"
 	"reflect"
 
 	"github.com/vektah/gqlparser/ast"
@@ -15,7 +14,7 @@ type GqlBody struct {
 }
 type RestBody struct {
 	Email string  `json:"email"`
-	Path  url.URL `json:"path"`
+	Path  string `json:"path"`
 }
 
 func Introspect(g GqlBody) (string, map[string]string) {
