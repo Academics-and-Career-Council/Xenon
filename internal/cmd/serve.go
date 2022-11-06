@@ -7,6 +7,9 @@ import (
 	"github.com/AnC-IITK/Xenon/internal/services"
 	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/cobra"
+	"github.com/go-co-op/gocron"
+	"time"
+	zmq "github.com/pebbe/zmq4"
 )
 
 func init() {
@@ -25,6 +28,10 @@ var serveCmd = &cobra.Command{
 		err := Serve()
 		return err
 	},
+}
+
+type Input struct {
+    Text string `json:"text"`
 }
 
 func Serve() error {
@@ -51,7 +58,22 @@ func Serve() error {
 			return nil
 		},
 	})
+	s := gocron.NewScheduler(time.UTC)
+	zctx, _ := zmq.NewContext()
 
+    zm, _ := zctx.NewSocket(zmq.REQ)
+    s.Bind("tcp://*:6666")
+	go s.Every(1).Hour().Do(func() {
+		input := new(Input)
+
+        s.Send(input.Text, 0)
+
+        if msg, err := s.Recv(0); err != nil {
+            panic(err)
+        } else {
+            
+        }
+	})
 	api.SetupRoutes(app)
 	err := app.Listen(":5010")
 	return err
