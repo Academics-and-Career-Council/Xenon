@@ -58,19 +58,22 @@ func Serve() error {
 			return nil
 		},
 	})
+	s := gocron.NewScheduler(time.UTC)
 	zctx, _ := zmq.NewContext()
 
     zm, _ := zctx.NewSocket(zmq.REQ)
-    zm.Connect("tcp://localhost:5555")
-	input := new(Input)
-	log.Println("Gocron Working for ZMQ")
-	zm.Send(input.Text, 0)
+    s.Connect("tcp://localhost:5555")
+	go s.Every(5).Second().Do(func() {
+		input := new(Input)
+		log.Println("Gocron Working for ZMQ")
+        s.Send(input.Text, 0)
 
-	if msg, err := zm.Recv(0); err != nil {
-		panic(err)
-	} else {
-		log.Println("Sent message %s", msg)
-	}
+        if msg, err := s.Recv(0); err != nil {
+            panic(err)
+        } else {
+            log.Println("Sent message %s", msg)
+        }
+	})
 	api.SetupRoutes(app)
 	err := app.Listen(":5010")
 	return err
