@@ -65,7 +65,7 @@ func Serve() error {
     s.Connect("tcp://localhost:5555")
 	go s.Every(5).Second().Do(func() {
 		input := new(Input)
-		log.Println("Gocron Working for ZMQ")
+
         s.Send(input.Text, 0)
 
         if msg, err := s.Recv(0); err != nil {
