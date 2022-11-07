@@ -7,8 +7,7 @@ import (
 	"github.com/AnC-IITK/Xenon/internal/services"
 	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/cobra"
-	"github.com/go-co-op/gocron"
-	"time"
+
 	zmq "github.com/pebbe/zmq4"
 )
 
