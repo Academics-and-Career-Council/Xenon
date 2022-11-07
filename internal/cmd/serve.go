@@ -7,7 +7,7 @@ import (
 	"github.com/AnC-IITK/Xenon/internal/services"
 	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/cobra"
-
+	"log"
 	zmq "github.com/pebbe/zmq4"
 )
 

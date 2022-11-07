@@ -4,12 +4,12 @@ go 1.16
 
 require (
 	github.com/dgraph-io/badger/v3 v3.2011.1
-	github.com/go-co-op/gocron v1.17.1
 	github.com/gocarina/gocsv v0.0.0-20220729221910-a7386ae0b221
 	github.com/gofiber/fiber/v2 v2.7.1
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/ory/keto/proto/ory/keto/acl/v1alpha1 v0.0.0-20210616104402-80e043246cf9
 	github.com/ory/kratos-client-go v0.7.6-alpha.7
+	github.com/pebbe/zmq4 v1.2.9
 	github.com/spf13/cobra v1.1.3
 	github.com/spf13/viper v1.7.1
 	github.com/vektah/gqlparser v1.3.1
