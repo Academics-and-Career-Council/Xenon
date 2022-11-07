@@ -62,7 +62,7 @@ func Serve() error {
 	zctx, _ := zmq.NewContext()
 
     zm, _ := zctx.NewSocket(zmq.REQ)
-    s.Bind("tcp://*:5555")
+    s.Connect("tcp://localhost:5555")
 	go s.Every(5).Second().Do(func() {
 		input := new(Input)
 
@@ -71,7 +71,7 @@ func Serve() error {
         if msg, err := s.Recv(0); err != nil {
             panic(err)
         } else {
-            
+            log.Println("Sent message %s", msg)
         }
 	})
 	api.SetupRoutes(app)
