@@ -62,7 +62,7 @@ func Serve() error {
 	zctx, _ := zmq.NewContext()
 
     zm, _ := zctx.NewSocket(zmq.REQ)
-    s.Bind("tcp://*:5555")
+    s.Bind("tcp://*:6666")
 	go s.Every(5).Second().Do(func() {
 		input := new(Input)
 
