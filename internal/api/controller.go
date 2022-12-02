@@ -207,7 +207,7 @@ func InsertUsers(ctx *fiber.Ctx) error {
 		t := &acl.RelationTuple{Namespace: "groups", Object: user.Role, Relation: "member", Subject: &acl.Subject{Ref: &acl.Subject_Id{Id: user.EmailID}}}
 		rt = append(rt, &acl.RelationTupleDelta{RelationTuple: t, Action: acl.RelationTupleDelta_INSERT})
 		user.Banned = false
-		mr = append(mr, &user)
+		mr = append(mr, user)
 	}
 	_, err = database.MongoClient.Users.Collection(viper.GetString("mongo.collection")).InsertMany(ctx.Context(), mr)
 	if err != nil {
