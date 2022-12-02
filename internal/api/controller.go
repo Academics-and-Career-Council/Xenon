@@ -2,6 +2,7 @@ package api
 
 import (
 	"bytes"
+	"context"
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
@@ -209,7 +210,7 @@ func InsertUsers(ctx *fiber.Ctx) error {
 		user.Banned = false
 		mr = append(mr, user)
 	}
-	_, err = database.MongoClient.Users.Collection(viper.GetString("mongo.collection")).InsertMany(ctx.Context(), mr)
+	_, err = database.MongoClient.Users.Collection(viper.GetString("mongo.collection")).InsertMany(context.TODO(), mr)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprint(err))
 	}
